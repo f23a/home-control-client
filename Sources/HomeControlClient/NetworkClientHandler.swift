@@ -31,15 +31,26 @@ extension NetworkClientHandler {
         return try await URLSession.shared.data(for: request)
     }
 
-    func get<T: Decodable>(path: String) async throws -> T {
-        let (responseData, _) = try await send(method: "GET", path: path)
+    private func decode<T: Decodable>(_ data: Data) throws -> T {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
-        return try decoder.decode(T.self, from: responseData)
+        return try decoder.decode(T.self, from: data)
     }
 
-    func post<B: Encodable>(path: String, body: B) async throws {
-        let requestData = try JSONEncoder().encode(body)
+    private func encode<T: Encodable>(_ value: T) throws -> Data {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        return try encoder.encode(value)
+    }
+
+    func get<T: Decodable>(path: String) async throws -> T {
+        let (responseData, _) = try await send(method: "GET", path: path)
+        return try decode(responseData)
+    }
+
+    @discardableResult
+    func post<B: Encodable>(path: String, body: B) async throws -> Data {
+        let requestData = try encode(body)
         let (responseData, response) = try await send(
             method: "POST",
             path: path,
@@ -61,5 +72,12 @@ extension NetworkClientHandler {
                 responseBody: responseData
             )
         }
+        return responseData
+    }
+
+    @discardableResult
+    func post<B: Encodable, T: Decodable>(path: String, body: B) async throws -> T {
+        let responseData = try await post(path: path, body: body)
+        return try decode(responseData)
     }
 }
