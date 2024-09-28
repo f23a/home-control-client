@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HomeControlKit
 
 public struct PushDeviceRoutes {
     var handler: NetworkClientHandler
@@ -14,19 +15,7 @@ public struct PushDeviceRoutes {
         self.handler = handler
     }
 
-    public func register(token: String) async throws {
-        struct RegisterContent: Codable {
-            let token: String
-        }
-
-        let content = RegisterContent(token: token)
-        let contentData = try JSONEncoder().encode(content)
-
-        var urlRequest = URLRequest(url: handler.baseURL.appending(path: "push_devices/register"))
-        urlRequest.httpMethod = "POST"
-        urlRequest.httpBody = contentData
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let (_, _) = try await URLSession.shared.data(for: urlRequest)
+    public func register(pushDevice: PushDevice) async throws {
+        try await handler.post(path: "push_devices/register", body: pushDevice)
     }
 }

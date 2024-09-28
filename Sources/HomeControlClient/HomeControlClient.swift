@@ -30,13 +30,6 @@ extension HomeControlClient: NetworkClientHandler {
         return urlRequest
     }
 
-    func data(for request: URLRequest) async throws -> (Data, URLResponse) {
-        var request = request
-        addAuthToken(urlRequest: &request)
-
-        return try await URLSession.shared.data(for: request)
-    }
-
     private func addAuthToken(urlRequest: inout URLRequest) {
         guard let authToken else { return }
         urlRequest.addValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")

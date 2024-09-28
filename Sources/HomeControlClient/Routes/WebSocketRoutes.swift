@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import HomeControlKit
 
 public struct WebSocketRoutes {
     var handler: NetworkClientHandler
@@ -14,6 +15,7 @@ public struct WebSocketRoutes {
         self.handler = handler
     }
 
+    @MainActor
     public func socketStream() -> SocketStream? {
         guard var components = URLComponents(url: handler.baseURL, resolvingAgainstBaseURL: false) else { return nil }
         components.scheme = "ws"
