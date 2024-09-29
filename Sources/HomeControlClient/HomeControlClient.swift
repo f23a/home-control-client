@@ -11,6 +11,7 @@ public struct HomeControlClient {
     public let baseURL: URL
     public var authToken: String?
 
+    public var electricityMeter: ElectricityMeterRoutes { .init(handler: self) }
     public var inverterReading: InverterReadingRoutes { .init(handler: self) }
     public var pushDevice: PushDeviceRoutes { .init(handler: self) }
     public var webSocket: WebSocketRoutes { .init(handler: self) }
