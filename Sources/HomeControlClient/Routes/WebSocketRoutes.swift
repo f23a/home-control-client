@@ -1,6 +1,6 @@
 //
 //  WebSocketRoutes.swift
-//  HomeControlKit
+//  home-control-client
 //
 //  Created by Christoph Pageler on 21.09.24.
 //
@@ -28,11 +28,6 @@ public struct WebSocketRoutes {
     }
 
     public func update(settings: WebSocketSettings, for id: UUID) async throws {
-        let url = handler.baseURL.appending(path: "ws/settings/\(id.uuidString)")
-        var request = handler.urlRequest(for: url)
-        request.httpMethod = "PUT"
-        request.httpBody = (try? JSONEncoder().encode(settings)) ?? .init()
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let (_, _) = try await URLSession.shared.data(for: request)
+        try await handler.put(path: "ws/settings/\(id.uuidString)", body: settings)
     }
 }

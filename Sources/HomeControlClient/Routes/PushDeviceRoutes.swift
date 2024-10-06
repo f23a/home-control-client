@@ -1,6 +1,6 @@
 //
 //  PushDeviceRoutes.swift
-//  HomeControlKit
+//  home-control-client
 //
 //  Created by Christoph Pageler on 10.05.24.
 //

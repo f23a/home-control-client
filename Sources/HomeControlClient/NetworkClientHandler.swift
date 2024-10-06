@@ -1,6 +1,6 @@
 //
 //  NetworkClientHandler.swift
-//  HomeControlKit
+//  home-control-client
 //
 //  Created by Christoph Pageler on 19.09.24.
 //
@@ -43,16 +43,11 @@ extension NetworkClientHandler {
         return try encoder.encode(value)
     }
 
-    func get<T: Decodable>(path: String) async throws -> T {
-        let (responseData, _) = try await send(method: "GET", path: path)
-        return try decode(responseData)
-    }
-
     @discardableResult
-    func post<B: Encodable>(path: String, body: B) async throws -> Data {
+    func sendAndReceiveData<B: Encodable>(method: String, path: String, body: B) async throws -> Data {
         let requestData = try encode(body)
         let (responseData, response) = try await send(
-            method: "POST",
+            method: method,
             path: path,
             headers: [
                 "Content-Type": "application/json"
@@ -75,9 +70,24 @@ extension NetworkClientHandler {
         return responseData
     }
 
+    func get<T: Decodable>(path: String) async throws -> T {
+        let (responseData, _) = try await send(method: "GET", path: path)
+        return try decode(responseData)
+    }
+
+    @discardableResult
+    func post<B: Encodable>(path: String, body: B) async throws -> Data {
+        try await sendAndReceiveData(method: "POST", path: path, body: body)
+    }
+
     @discardableResult
     func post<B: Encodable, T: Decodable>(path: String, body: B) async throws -> T {
         let responseData = try await post(path: path, body: body)
         return try decode(responseData)
+    }
+
+    @discardableResult
+    func put<B: Encodable>(path: String, body: B) async throws -> Data {
+        try await sendAndReceiveData(method: "PUT", path: path, body: body)
     }
 }

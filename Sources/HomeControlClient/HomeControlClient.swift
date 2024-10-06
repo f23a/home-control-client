@@ -1,6 +1,6 @@
 //
 //  HomeControlClient.swift
-//  HomeControlKit
+//  home-control-client
 //
 //  Created by Christoph Pageler on 30.04.24.
 //
@@ -11,10 +11,11 @@ public struct HomeControlClient {
     public let baseURL: URL
     public var authToken: String?
 
-    public var electricityMeter: ElectricityMeterRoutes { .init(handler: self) }
+    public var electricityMeter: ElectricityMeterRoutes { .init(handler: self) }
     public var inverterReading: InverterReadingRoutes { .init(handler: self) }
     public var pushDevice: PushDeviceRoutes { .init(handler: self) }
     public var webSocket: WebSocketRoutes { .init(handler: self) }
+    public var settings: SettingRoutes { .init(handler: self) }
 
     public init?(address: String, port: Int) {
         guard let url = URL(string: "http://\(address):\(port)") else { return nil }

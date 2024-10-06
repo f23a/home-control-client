@@ -1,6 +1,6 @@
 //
 //  InverterReadingRoutes.swift
-//  HomeControlKit
+//  home-control-client
 //
 //  Created by Christoph Pageler on 30.04.24.
 //

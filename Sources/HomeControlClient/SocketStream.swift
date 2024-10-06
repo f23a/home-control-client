@@ -1,6 +1,6 @@
 //
 //  SocketStream.swift.swift
-//  HomeControlKit
+//  home-control-client
 //
 //  Created by Christoph Pageler on 21.09.24.
 //
