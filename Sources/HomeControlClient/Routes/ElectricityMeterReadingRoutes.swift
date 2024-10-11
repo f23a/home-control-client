@@ -15,14 +15,14 @@ public struct ElectricityMeterReadingRoutes {
         self.handler = handler
     }
 
-    public func index(id: String) async throws -> [StoredElectricityMeterReading] {
+    public func index(id: String) async throws -> [Stored<ElectricityMeterReading>] {
         try await handler.get(path: "electricity_meters/\(id)/readings")
     }
 
     public func create(
         id: UUID,
         _ electricityMeterReading: ElectricityMeterReading
-    ) async throws -> StoredElectricityMeterReading {
+    ) async throws -> Stored<ElectricityMeterReading> {
         try await handler.post(path: "electricity_meters/\(id.uuidString)/readings", body: electricityMeterReading)
     }
 }

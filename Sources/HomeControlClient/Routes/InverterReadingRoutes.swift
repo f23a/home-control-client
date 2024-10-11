@@ -15,11 +15,11 @@ public struct InverterReadingRoutes {
         self.handler = handler
     }
 
-    public func latest() async throws -> StoredInverterReading {
+    public func latest() async throws -> Stored<InverterReading> {
         try await handler.get(path: "inverter_readings/latest")
     }
 
-    public func create(_ inverterReading: InverterReading) async throws -> StoredInverterReading {
+    public func create(_ inverterReading: InverterReading) async throws -> Stored<InverterReading> {
         try await handler.post(path: "inverter_readings", body: inverterReading)
     }
 }
