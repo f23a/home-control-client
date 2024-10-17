@@ -44,13 +44,13 @@ extension NetworkClientHandler {
     }
 
     @discardableResult
-    func sendAndReceiveData<B: Encodable>(method: String, path: String, body: B) async throws -> Data {
+    func sendBodyAndReceiveData<B: Encodable>(method: String, path: String, body: B) async throws -> Data {
         let requestData = try encode(body)
-        return try await sendAndReceiveData(method: method, path: path, body: requestData)
+        return try await sendDataAndReceiveData(method: method, path: path, body: requestData)
     }
 
     @discardableResult
-    func sendAndReceiveData(method: String, path: String, body: Data? = nil) async throws -> Data {
+    func sendDataAndReceiveData(method: String, path: String, body: Data? = nil) async throws -> Data {
         let (responseData, response) = try await send(
             method: method,
             path: path,
@@ -82,12 +82,12 @@ extension NetworkClientHandler {
 
     @discardableResult
     func post<B: Encodable>(path: String, body: B) async throws -> Data {
-        try await sendAndReceiveData(method: "POST", path: path, body: body)
+        try await sendBodyAndReceiveData(method: "POST", path: path, body: body)
     }
 
     @discardableResult
     func post(path: String) async throws {
-        try await sendAndReceiveData(method: "POST", path: path)
+        try await send(method: "POST", path: path)
     }
 
     @discardableResult
@@ -98,12 +98,12 @@ extension NetworkClientHandler {
 
     @discardableResult
     func put<B: Encodable>(path: String, body: B) async throws -> Data {
-        try await sendAndReceiveData(method: "PUT", path: path, body: body)
+        try await sendBodyAndReceiveData(method: "PUT", path: path, body: body)
     }
 
     @discardableResult
     func put<B: Encodable, T: Decodable>(path: String, body: B) async throws -> T {
-        let responseData = try await sendAndReceiveData(method: "PUT", path: path, body: body)
+        let responseData = try await sendBodyAndReceiveData(method: "PUT", path: path, body: body)
         return try decode(responseData)
     }
 
