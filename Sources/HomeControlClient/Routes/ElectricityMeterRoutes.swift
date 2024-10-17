@@ -11,7 +11,7 @@ import HomeControlKit
 public struct ElectricityMeterRoutes {
     var handler: NetworkClientHandler
 
-    public var reading: ElectricityMeterReadingRoutes { .init(handler: handler) }
+    public func readings(id: UUID) -> ElectricityMeterReadingRoutes { .init(handler: handler, id: id) }
 
     init(handler: NetworkClientHandler) {
         self.handler = handler
@@ -23,5 +23,9 @@ public struct ElectricityMeterRoutes {
 
     public func create(_ electricityMeter: ElectricityMeter) async throws -> Stored<ElectricityMeter> {
         try await handler.post(path: "electricity_meters", body: electricityMeter)
+    }
+
+    public func delete(id: UUID) async throws {
+        try await handler.delete(path: "electricity_meters/\(id)")
     }
 }

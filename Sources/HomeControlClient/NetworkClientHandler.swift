@@ -46,13 +46,18 @@ extension NetworkClientHandler {
     @discardableResult
     func sendAndReceiveData<B: Encodable>(method: String, path: String, body: B) async throws -> Data {
         let requestData = try encode(body)
+        return try await sendAndReceiveData(method: method, path: path, body: requestData)
+    }
+
+    @discardableResult
+    func sendAndReceiveData(method: String, path: String, body: Data? = nil) async throws -> Data {
         let (responseData, response) = try await send(
             method: method,
             path: path,
             headers: [
                 "Content-Type": "application/json"
             ],
-            body: requestData
+            body: body
         )
         guard
             let httpResponse = response as? HTTPURLResponse,
@@ -81,6 +86,11 @@ extension NetworkClientHandler {
     }
 
     @discardableResult
+    func post(path: String) async throws {
+        try await sendAndReceiveData(method: "POST", path: path)
+    }
+
+    @discardableResult
     func post<B: Encodable, T: Decodable>(path: String, body: B) async throws -> T {
         let responseData = try await post(path: path, body: body)
         return try decode(responseData)
@@ -89,5 +99,15 @@ extension NetworkClientHandler {
     @discardableResult
     func put<B: Encodable>(path: String, body: B) async throws -> Data {
         try await sendAndReceiveData(method: "PUT", path: path, body: body)
+    }
+
+    @discardableResult
+    func put<B: Encodable, T: Decodable>(path: String, body: B) async throws -> T {
+        let responseData = try await sendAndReceiveData(method: "PUT", path: path, body: body)
+        return try decode(responseData)
+    }
+
+    func delete(path: String) async throws {
+        try await send(method: "DELETE", path: path)
     }
 }

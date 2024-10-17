@@ -12,10 +12,12 @@ public struct HomeControlClient {
     public var authToken: String?
 
     public var electricityMeter: ElectricityMeterRoutes { .init(handler: self) }
+    public var forceChargingRanges: ForceChargingRangeRoutes { .init(handler: self) }
     public var inverterReading: InverterReadingRoutes { .init(handler: self) }
+    public var messages: MessageRoutes { .init(handler: self) }
     public var pushDevice: PushDeviceRoutes { .init(handler: self) }
-    public var webSocket: WebSocketRoutes { .init(handler: self) }
     public var settings: SettingRoutes { .init(handler: self) }
+    public var webSocket: WebSocketRoutes { .init(handler: self) }
 
     public init?(address: String, port: Int) {
         guard let url = URL(string: "http://\(address):\(port)") else { return nil }
