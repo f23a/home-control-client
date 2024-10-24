@@ -8,7 +8,7 @@
 import Foundation
 import HomeControlKit
 
-public struct ElectricityMeterReadingRoutes {
+public struct ElectricityMeterReadingRoutes: Sendable {
     var handler: NetworkClientHandler
     var id: UUID
 

@@ -8,7 +8,7 @@
 import Foundation
 import HomeControlKit
 
-public struct SettingRoutes {
+public struct SettingRoutes: Sendable {
     var handler: NetworkClientHandler
 
     init(handler: NetworkClientHandler) {

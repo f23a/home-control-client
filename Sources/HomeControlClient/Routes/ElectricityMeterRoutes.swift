@@ -8,7 +8,7 @@
 import Foundation
 import HomeControlKit
 
-public struct ElectricityMeterRoutes {
+public struct ElectricityMeterRoutes: Sendable {
     var handler: NetworkClientHandler
 
     public func readings(id: UUID) -> ElectricityMeterReadingRoutes { .init(handler: handler, id: id) }

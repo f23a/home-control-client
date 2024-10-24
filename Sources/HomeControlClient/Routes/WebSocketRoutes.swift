@@ -8,7 +8,7 @@
 import Foundation
 import HomeControlKit
 
-public struct WebSocketRoutes {
+public struct WebSocketRoutes: Sendable {
     var handler: NetworkClientHandler
 
     init(handler: NetworkClientHandler) {

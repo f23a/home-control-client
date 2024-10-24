@@ -8,7 +8,7 @@
 import Foundation
 import HomeControlKit
 
-public struct ForceChargingRangeRoutes {
+public struct ForceChargingRangeRoutes: Sendable {
     var handler: NetworkClientHandler
 
     init(handler: NetworkClientHandler) {

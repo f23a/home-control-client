@@ -8,7 +8,7 @@
 import Foundation
 import HomeControlKit
 
-public struct PushDeviceRoutes {
+public struct PushDeviceRoutes: Sendable {
     var handler: NetworkClientHandler
 
     init(handler: NetworkClientHandler) {

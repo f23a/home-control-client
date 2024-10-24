@@ -8,7 +8,7 @@
 import Foundation
 import HomeControlKit
 
-public struct InverterReadingRoutes {
+public struct InverterReadingRoutes: Sendable {
     var handler: NetworkClientHandler
 
     init(handler: NetworkClientHandler) {

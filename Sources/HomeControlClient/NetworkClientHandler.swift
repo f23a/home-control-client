@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol NetworkClientHandler {
+protocol NetworkClientHandler: Sendable {
     var baseURL: URL { get }
 
     func urlRequest(for url: URL) -> URLRequest

@@ -15,7 +15,7 @@ let package = Package(
         .library(name: "HomeControlClient", targets: ["HomeControlClient"])
     ],
     dependencies: [
-        .package(url: "https://github.com/f23a/home-control-kit.git", from: "1.2.0")
+        .package(url: "https://github.com/f23a/home-control-kit.git", from: "1.3.0")
 //        .package(path: "../home-control-kit")
     ],
     targets: [
