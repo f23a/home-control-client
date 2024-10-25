@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct HomeControlClient {
+public struct HomeControlClient: HomeControlClientable {
     public let baseURL: URL
     public var authToken: String?
 
