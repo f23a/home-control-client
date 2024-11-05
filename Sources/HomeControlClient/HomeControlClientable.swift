@@ -7,6 +7,7 @@
 
 public protocol HomeControlClientable {
     var electricityMeter: ElectricityMeterRoutes { get }
+    var electricityPrice: ElectricityPriceRoutes { get }
     var forceChargingRanges: ForceChargingRangeRoutes { get }
     var inverterReading: InverterReadingRoutes { get }
     var messages: MessageRoutes { get }

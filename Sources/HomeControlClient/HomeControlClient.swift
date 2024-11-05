@@ -12,6 +12,7 @@ public struct HomeControlClient: HomeControlClientable {
     public var authToken: String?
 
     public var electricityMeter: ElectricityMeterRoutes { .init(handler: self) }
+    public var electricityPrice: ElectricityPriceRoutes { .init(handler: self) }
     public var forceChargingRanges: ForceChargingRangeRoutes { .init(handler: self) }
     public var inverterReading: InverterReadingRoutes { .init(handler: self) }
     public var messages: MessageRoutes { .init(handler: self) }

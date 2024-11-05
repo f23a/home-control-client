@@ -44,13 +44,13 @@ extension NetworkClientHandler {
     }
 
     @discardableResult
-    func sendBodyAndReceiveData<B: Encodable>(method: String, path: String, body: B) async throws -> Data {
+    private func sendBodyAndReceiveData<B: Encodable>(method: String, path: String, body: B) async throws -> Data {
         let requestData = try encode(body)
         return try await sendDataAndReceiveData(method: method, path: path, body: requestData)
     }
 
     @discardableResult
-    func sendDataAndReceiveData(method: String, path: String, body: Data? = nil) async throws -> Data {
+    private func sendDataAndReceiveData(method: String, path: String, body: Data? = nil) async throws -> Data {
         let (responseData, response) = try await send(
             method: method,
             path: path,
@@ -59,25 +59,44 @@ extension NetworkClientHandler {
             ],
             body: body
         )
+        return try receiveData(data: responseData, response: response)
+    }
+
+    private func receiveData(data: Data, response: URLResponse, isOptionalAllowed: Bool = false) throws -> Data {
         guard
             let httpResponse = response as? HTTPURLResponse,
             let statusCodeType = httpResponse.statusCodeType
         else {
-            throw HomeControlClientError(message: .invalidURLResponse, responseBody: responseData)
+            throw HomeControlClientError(message: .invalidURLResponse, responseBody: data)
         }
+
+        // Return empty data if optional is allowed
+        if httpResponse.statusCode == 404 && isOptionalAllowed { return .init() }
+
         guard statusCodeType == .successful else {
             throw HomeControlClientError(
                 message: .unsuccessfulStatusCode,
                 httpResponse: httpResponse,
-                responseBody: responseData
+                responseBody: data
             )
         }
-        return responseData
+        return data
     }
 
     func get<T: Decodable>(path: String) async throws -> T {
-        let (responseData, _) = try await send(method: "GET", path: path)
-        return try decode(responseData)
+        let (responseData, response) = try await send(method: "GET", path: path)
+        let data = try receiveData(data: responseData, response: response)
+        return try decode(data)
+    }
+
+    func getOptional<T: Decodable>(path: String) async throws -> T? {
+        let (responseData, response) = try await send(method: "GET", path: path)
+        let data = try receiveData(data: responseData, response: response, isOptionalAllowed: true)
+        if data.isEmpty {
+            return nil
+        } else {
+            return try decode(data)
+        }
     }
 
     @discardableResult
