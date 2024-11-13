@@ -20,7 +20,12 @@ public struct ElectricityPriceRoutes: Sendable {
     }
 
     public func latest() async throws -> Stored<ElectricityPrice>? {
-        try await handler.getOptional(path: "electricity_prices/latest")
+        let page = try await query(.init(
+            pagination: .init(page: 0, per: 1),
+            filter: [],
+            sort: .init(value: .startsAt, direction: .descending))
+        )
+        return page.items.first
     }
 
     @discardableResult
