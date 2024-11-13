@@ -34,3 +34,9 @@ public extension Setting where Content == AdapterSungrowInverterSetting {
         .init(id: "adapter-sungrow-inverter", content: AdapterSungrowInverterSetting.self)
     }
 }
+
+public extension Setting where Content == ChargeFinderSettings {
+    static var chargeFinderSetting: Setting {
+        .init(id: "charge-finder", content: ChargeFinderSettings.self)
+    }
+}

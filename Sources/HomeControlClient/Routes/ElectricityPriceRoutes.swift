@@ -15,8 +15,8 @@ public struct ElectricityPriceRoutes: Sendable {
         self.handler = handler
     }
 
-    public func index() async throws -> [Stored<ElectricityPrice>] {
-        try await handler.get(path: "electricity_prices")
+    public func query(_ query: ElectricityPriceQuery) async throws -> QueryPage<Stored<ElectricityPrice>> {
+        try await handler.post(path: "electricity_prices/query", body: query)
     }
 
     public func latest() async throws -> Stored<ElectricityPrice>? {

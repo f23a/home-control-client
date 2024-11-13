@@ -19,8 +19,17 @@ public struct ForceChargingRangeRoutes: Sendable {
         try await handler.get(path: "force_charging_ranges")
     }
 
-    public func query(_ query: ForceChargingRangeQuery) async throws -> [Stored<ForceChargingRange>] {
+    public func query(_ query: ForceChargingRangeQuery) async throws -> QueryPage<Stored<ForceChargingRange>> {
         try await handler.post(path: "force_charging_ranges/query", body: query)
+    }
+
+    public func latest() async throws -> Stored<ForceChargingRange>? {
+        let page = try await query(.init(
+            pagination: .init(page: 0, per: 1),
+            filter: [],
+            sort: .init(value: .endsAt, direction: .descending))
+        )
+        return page.items.first
     }
 
     public func create(_ forceChargingRange: ForceChargingRange) async throws -> Stored<ForceChargingRange> {
