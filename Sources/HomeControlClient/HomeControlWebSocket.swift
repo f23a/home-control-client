@@ -7,9 +7,13 @@
 
 import Foundation
 import HomeControlKit
+import HomeControlLogging
+import Logging
 
 @MainActor
 public class HomeControlWebSocket {
+    private let logger = Logger(homeControl: "client.websocket")
+
     public let client: HomeControlClientable
 
     public weak var delegate: HomeControlWebSocketDelegate?
@@ -41,6 +45,7 @@ public class HomeControlWebSocket {
 
     @objc private func fireRepairWebSocketTimer() {
         guard stream == nil else { return }
+        logger.warning("Repair websocket")
         initializeWebSocket()
     }
 
@@ -52,9 +57,10 @@ public class HomeControlWebSocket {
             do {
                 for try await message in stream {
                     guard let webSocketMessage = message.webSocketMessage else {
-                        print("Unable to handle message \(message)")
+                        logger.critical("Unable to handle message \(message)")
                         continue
                     }
+                    logger.info("Received message \(message.webSocketMessage?.identifier ?? "")")
 
                     switch webSocketMessage {
                     case let didRegister as WebSocketDidRegisterMessage:
@@ -67,11 +73,11 @@ public class HomeControlWebSocket {
                     case let message as WebSocketDidSaveSettingMessage:
                         delegate?.homeControlWebSocket(self, didSaveSetting: message.content.setting)
                     default:
-                        print("Unknown websocket message \(webSocketMessage.identifier)")
+                        logger.critical("Unknown websocket message \(webSocketMessage.identifier)")
                     }
                 }
             } catch {
-                print("Failed message \(error)")
+                logger.critical("Failed message \(error)")
             }
 
             self.stream = nil
@@ -85,8 +91,15 @@ public class HomeControlWebSocket {
             do {
                 try await client.webSocket.update(settings: settings, for: webSocketID)
             } catch {
-                print("Failed to update settings")
+                logger.critical("Failed to update settings")
             }
         }
+    }
+
+    public func close() {
+        repairWebSocketTimer.invalidate()
+        repairWebSocketTimer = nil
+        stream?.cancel()
+        logger.info("Closed")
     }
 }

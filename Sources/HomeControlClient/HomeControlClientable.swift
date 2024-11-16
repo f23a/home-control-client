@@ -6,6 +6,8 @@
 //
 
 public protocol HomeControlClientable {
+    var addressDisplayName: String { get }
+
     var electricityMeter: ElectricityMeterRoutes { get }
     var electricityPrice: ElectricityPriceRoutes { get }
     var forceChargingRanges: ForceChargingRangeRoutes { get }

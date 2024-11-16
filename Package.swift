@@ -15,14 +15,16 @@ let package = Package(
         .library(name: "HomeControlClient", targets: ["HomeControlClient"])
     ],
     dependencies: [
-        .package(url: "https://github.com/f23a/home-control-kit.git", from: "1.7.0")
-//        .package(path: "../home-control-kit")
+//        .package(path: "../home-control-kit"),
+        .package(url: "https://github.com/f23a/home-control-kit.git", from: "1.7.0"),
+        .package(url: "https://github.com/f23a/home-control-logging.git", from: "1.0.0")
     ],
     targets: [
         .target(
             name: "HomeControlClient",
             dependencies: [
-                .product(name: "HomeControlKit", package: "home-control-kit")
+                .product(name: "HomeControlKit", package: "home-control-kit"),
+                .product(name: "HomeControlLogging", package: "home-control-logging")
             ]
         ),
         .testTarget(
