@@ -32,6 +32,28 @@ public struct ForceChargingRangeRoutes: Sendable {
         return page.items.first
     }
 
+    public func query(
+        intersecting range: Range<Date>,
+        pagination: QueryPagination
+    ) async throws -> QueryPage<Stored<ForceChargingRange>> {
+        let query = ForceChargingRangeQuery(
+            pagination: pagination,
+            filter: [
+                .startsAt(.init(value: range.upperBound, method: .lessThanOrEqual)),
+                .endsAt(.init(value: range.lowerBound, method: .greaterThanOrEqual))
+            ],
+            sort: .init(value: .startsAt, direction: .ascending)
+        )
+        return try await self.query(query)
+    }
+
+    public func query(
+        activeAt: Date,
+        pagination: QueryPagination
+    ) async throws -> QueryPage<Stored<ForceChargingRange>> {
+        try await query(intersecting: activeAt..<activeAt, pagination: pagination)
+    }
+
     public func create(_ forceChargingRange: ForceChargingRange) async throws -> Stored<ForceChargingRange> {
         try await handler.post(path: "force_charging_ranges", body: forceChargingRange)
     }
