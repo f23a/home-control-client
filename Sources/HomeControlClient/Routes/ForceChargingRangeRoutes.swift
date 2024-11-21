@@ -34,14 +34,17 @@ public struct ForceChargingRangeRoutes: Sendable {
 
     public func query(
         intersecting range: Range<Date>,
+        additionalFilter: [ForceChargingRangeQueryFilter] = [],
         pagination: QueryPagination
     ) async throws -> QueryPage<Stored<ForceChargingRange>> {
+        var filter: [ForceChargingRangeQueryFilter] = [
+            .startsAt(.init(value: range.upperBound, method: .lessThanOrEqual)),
+            .endsAt(.init(value: range.lowerBound, method: .greaterThanOrEqual))
+        ]
+        filter.append(contentsOf: additionalFilter)
         let query = ForceChargingRangeQuery(
             pagination: pagination,
-            filter: [
-                .startsAt(.init(value: range.upperBound, method: .lessThanOrEqual)),
-                .endsAt(.init(value: range.lowerBound, method: .greaterThanOrEqual))
-            ],
+            filter: filter,
             sort: .init(value: .startsAt, direction: .ascending)
         )
         return try await self.query(query)
@@ -49,9 +52,14 @@ public struct ForceChargingRangeRoutes: Sendable {
 
     public func query(
         activeAt: Date,
+        additionalFilter: [ForceChargingRangeQueryFilter] = [],
         pagination: QueryPagination
     ) async throws -> QueryPage<Stored<ForceChargingRange>> {
-        try await query(intersecting: activeAt..<activeAt, pagination: pagination)
+        try await query(
+            intersecting: activeAt..<activeAt,
+            additionalFilter: additionalFilter,
+            pagination: pagination
+        )
     }
 
     public func create(_ forceChargingRange: ForceChargingRange) async throws -> Stored<ForceChargingRange> {
