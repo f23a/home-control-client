@@ -21,7 +21,7 @@ public struct ElectricityPriceRoutes: Sendable {
 
     public func latest() async throws -> Stored<ElectricityPrice>? {
         let page = try await query(.init(
-            pagination: .init(page: 0, per: 1),
+            pagination: .init(page: 1, per: 1),
             filter: [],
             sort: .init(value: .startsAt, direction: .descending))
         )

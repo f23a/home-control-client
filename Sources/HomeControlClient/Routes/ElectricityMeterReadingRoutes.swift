@@ -17,17 +17,22 @@ public struct ElectricityMeterReadingRoutes: Sendable {
         self.id = id
     }
 
-    public func index() async throws -> [Stored<ElectricityMeterReading>] {
-        try await handler.get(path: "electricity_meters/\(id)/readings")
-    }
-
     public func create(
         _ electricityMeterReading: ElectricityMeterReading
     ) async throws -> Stored<ElectricityMeterReading> {
         try await handler.post(path: "electricity_meters/\(id.uuidString)/readings", body: electricityMeterReading)
     }
 
-    public func latest() async throws -> Stored<ElectricityMeterReading> {
-        try await handler.get(path: "electricity_meters/\(id.uuidString)/readings/latest")
+    public func query(_ query: ElectricityMeterReadingQuery) async throws -> QueryPage<Stored<ElectricityMeterReading>> {
+        try await handler.post(path: "electricity_meters/\(id.uuidString)/readings/query", body: query)
+    }
+
+    public func latest() async throws -> Stored<ElectricityMeterReading>? {
+        let page = try await query(.init(
+            pagination: .init(page: 1, per: 1),
+            filter: [],
+            sort: .init(value: .readingAt, direction: .descending))
+        )
+        return page.items.first
     }
 }
