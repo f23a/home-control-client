@@ -15,10 +15,6 @@ public struct ForceChargingRangeRoutes: Sendable {
         self.handler = handler
     }
 
-    public func index() async throws -> [Stored<ForceChargingRange>] {
-        try await handler.get(path: "force_charging_ranges")
-    }
-
     public func query(_ query: ForceChargingRangeQuery) async throws -> QueryPage<Stored<ForceChargingRange>> {
         try await handler.post(path: "force_charging_ranges/query", body: query)
     }
