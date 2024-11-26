@@ -22,7 +22,7 @@ public struct PushDeviceRoutes: Sendable {
     public func settings(
         deviceToken: String,
         messageType: MessageType
-    ) async throws -> PushDeviceMessageTypeSettings {
+    ) async throws -> Stored<PushDeviceMessageTypeSettings> {
         try await handler.get(path: "push_devices/\(deviceToken)/\(messageType)/settings")
     }
 
