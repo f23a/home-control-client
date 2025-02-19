@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
 //        .package(path: "../home-control-kit"),
-        .package(url: "https://github.com/f23a/home-control-kit.git", from: "1.8.3"),
+        .package(url: "https://github.com/f23a/home-control-kit.git", from: "1.8.4"),
         .package(url: "https://github.com/f23a/home-control-logging.git", from: "1.0.0")
     ],
     targets: [
